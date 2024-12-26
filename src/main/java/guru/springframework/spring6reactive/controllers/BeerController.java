@@ -40,4 +40,10 @@ public class BeerController {
         return beerService.updateBeer(beerId, beerDTO)
                 .map(savedDto -> ResponseEntity.noContent().build());
     }
+
+    @PatchMapping(BEERS_PATH_ID)
+    Mono<ResponseEntity<Void>> patchBeer(@PathVariable("beerId") Integer beerId, @RequestBody BeerDTO beerDTO) {
+        return beerService.patchBeer(beerId, beerDTO)
+                .map(savedDto -> ResponseEntity.noContent().build());
+    }
 }
