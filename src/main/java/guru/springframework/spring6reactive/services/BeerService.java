@@ -8,4 +8,6 @@ public interface BeerService {
     Flux<BeerDTO> listBeers();
 
     Mono<BeerDTO> findById(Integer beerId);
+
+    Mono<BeerDTO> createBeer(BeerDTO beerDTO);
 }
