@@ -1,12 +1,7 @@
 package guru.springframework.spring6reactive.controllers;
 
-import guru.springframework.spring6reactive.domain.Beer;
-import guru.springframework.spring6reactive.model.BeerDTO;
-import guru.springframework.spring6reactive.repositories.BeerRepositoryTest;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import guru.springframework.spring6reactive.model.CustomerDTO;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,18 +9,24 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
 @AutoConfigureWebTestClient
-class BeerControllerTest {
+class CustomerControllerTest {
 
     @Autowired
-    WebTestClient webTestClient;
+    private WebTestClient webTestClient;
+
+    CustomerDTO getCustomerTest() {
+        return CustomerDTO.builder()
+                .customerName("Test").build();
+    }
 
     @Test
-    @Order(2)
-    void testListBeers() {
-        webTestClient.get().uri(BeerController.BEERS_PATH)
+    @Order(1)
+    void testListCustomers() {
+        webTestClient.get().uri(CustomerController.CUSTOMER_PATH)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, "application/json")
@@ -33,38 +34,38 @@ class BeerControllerTest {
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     void testGetById() {
-        webTestClient.get().uri(BeerController.BEERS_PATH_ID ,+ 1)
+        webTestClient.get().uri(CustomerController.CUSTOMER_PATH_ID, 1)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, "application/json")
-                .expectBody(BeerDTO.class);
+                .expectBody(CustomerDTO.class);
     }
 
     @Test
     @Order(3)
-    void testCreateBeer() {
-        webTestClient.post().uri(BeerController.BEERS_PATH)
-                .body(Mono.just(BeerRepositoryTest.getTestBeer()), BeerDTO.class)
+    void testCreateCustomer() {
+        webTestClient.post().uri(CustomerController.CUSTOMER_PATH)
+                .body(Mono.just(getCustomerTest()), CustomerDTO.class)
                 .exchange()
                 .expectStatus().isCreated()
-                .expectHeader().location("http://localhost:8080/api/v2/beer/4");
+                .expectHeader().location("http://localhost:8080/api/v2/customer/4");
     }
 
     @Test
     @Order(4)
-    void testUpdateBeer() {
-        webTestClient.put().uri(BeerController.BEERS_PATH_ID, 1)
-                .body(Mono.just(BeerRepositoryTest.getTestBeer()), BeerDTO.class)
+    void testUpdateCustomer() {
+        webTestClient.put().uri(CustomerController.CUSTOMER_PATH_ID, 1)
+                .body(Mono.just(getCustomerTest()), CustomerDTO.class)
                 .exchange()
                 .expectStatus().isNoContent();
     }
 
     @Test
     @Order(5)
-    void testDeleteBeer() {
-        webTestClient.delete().uri(BeerController.BEERS_PATH_ID, 1)
+    void testDeleteCustomer() {
+        webTestClient.delete().uri(CustomerController.CUSTOMER_PATH_ID, 1)
                 .exchange()
                 .expectStatus().isNoContent();
     }
