@@ -46,4 +46,10 @@ public class BeerController {
         return beerService.patchBeer(beerId, beerDTO)
                 .map(savedDto -> ResponseEntity.noContent().build());
     }
+
+    @DeleteMapping(BEERS_PATH_ID)
+    Mono<ResponseEntity<Void>> deleteBeer(@PathVariable("beerId") Integer beerId) {
+        return beerService.deleteBeer(beerId)
+                .then(Mono.just(ResponseEntity.noContent().build()));
+    }
 }
