@@ -34,4 +34,10 @@ public class BeerController {
                         .fromHttpUrl("http://localhost:8080" + BEERS_PATH + "/" + savedDto.getId())
                         .build().toUri()).build());
     }
+
+    @PutMapping(BEERS_PATH_ID)
+    Mono<ResponseEntity<Void>> updateBeer(@PathVariable("beerId") Integer beerId, @RequestBody BeerDTO beerDTO) {
+        return beerService.updateBeer(beerId, beerDTO)
+                .map(savedDto -> ResponseEntity.noContent().build());
+    }
 }
