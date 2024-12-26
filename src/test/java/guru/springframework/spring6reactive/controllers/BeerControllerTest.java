@@ -76,6 +76,15 @@ class BeerControllerTest {
 
     @Test
     @Order(4)
+    void testUpdateBeerNotFound() {
+        webTestClient.put().uri(BeerController.BEERS_PATH_ID, 999)
+                .body(Mono.just(BeerRepositoryTest.getTestBeer()), BeerDTO.class)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    @Order(4)
     void testUpdateBeerBadRequest() {
         Beer testBeer = BeerRepositoryTest.getTestBeer();
         testBeer.setBeerName("");
